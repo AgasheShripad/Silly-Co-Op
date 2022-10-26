@@ -29,10 +29,10 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        
+        /*
        if(players!=null && players.Count > 0)
             foreach(PlayerInput p in players)
-                Debug.Log(p.transform.parent.name+" "+p.transform.parent.GetComponentInChildren<Camera>().cullingMask);
+                Debug.Log(p.transform.parent.name+" "+p.transform.parent.GetComponentInChildren<Camera>().cullingMask);*/
     }
 
     public void AddPlayer(PlayerInput player)
@@ -41,17 +41,16 @@ public class PlayerManager : MonoBehaviour
 
         
         //need to use the parent due to the structure of the prefab
-        Transform playerParent = player.transform.parent;
-        playerParent.position = startingPoints[players.Count - 1].position;
+        player.transform.position = startingPoints[players.Count - 1].position;
 
         //convert layer mask (bit) to an integer 
         int layerToAdd = (int)Mathf.Log(playerLayers[players.Count - 1].value, 2);
-        Debug.Log("Layer TO Add "+layerToAdd);
+        //Debug.Log("Layer TO Add "+layerToAdd);
         //set the layer
-        playerParent.GetComponentInChildren<CinemachineVirtualCamera>().gameObject.layer = layerToAdd;
+        //player.GetComponentInChildren<CinemachineVirtualCamera>().gameObject.layer = layerToAdd;
         //add the layer
 
-        playerParent.GetComponentInChildren<Camera>().cullingMask |= 1 << layerToAdd;
+        player.GetComponentInChildren<Camera>().cullingMask |= 1 << layerToAdd;
 
         //set the action in the custom cinemachine Input Handler
         //playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Look");

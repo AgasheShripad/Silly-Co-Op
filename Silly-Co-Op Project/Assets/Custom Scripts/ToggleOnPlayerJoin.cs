@@ -3,11 +3,12 @@ using UnityEngine.InputSystem;
 
 public class ToggleOnPlayerJoin : MonoBehaviour
 {
+    [SerializeField]
     private PlayerInputManager playerInputManager;
 
     private void Awake()
     {
-        playerInputManager = FindObjectOfType<PlayerInputManager>();
+       if(playerInputManager==null) playerInputManager = FindObjectOfType<PlayerInputManager>();
     }
 
     private void OnEnable()
