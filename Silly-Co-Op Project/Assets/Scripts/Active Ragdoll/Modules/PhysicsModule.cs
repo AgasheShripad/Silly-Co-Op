@@ -35,6 +35,9 @@ namespace ActiveRagdoll {
         public float maxManualRotSpeed = 5;
 
         private Vector2 _torqueInput;
+        private float _jumptorqueInput;
+
+
 
         [Header("--- STABILIZER JOINT ---")]
         [SerializeField] private JointDriveConfig _stabilizerJointDrive;
@@ -44,6 +47,16 @@ namespace ActiveRagdoll {
                     _stabilizerJoint.angularXDrive = _stabilizerJoint.angularXDrive = (JointDrive)value;
                 }
         }
+
+        [Header("--- Jump Force ---")]
+        public float JumpForce = 2000f;
+
+        [Header("--- Air Control ---")]
+
+        [SerializeField] private CameraModule _cameraModule;
+        public bool AirControl = false;
+        public float FloatForce = 10f;
+        public float FloatHeight = 5f;
 
         private GameObject _stabilizerGameobject;
         private Rigidbody _stabilizerRigidbody;
@@ -60,6 +73,7 @@ namespace ActiveRagdoll {
 
 
         private void Start() {
+            if (_cameraModule == null) _cameraModule = GetComponent<CameraModule>();
             UpdateTargetRotation();
             InitializeStabilizerJoint();
             StartBalance();
@@ -83,6 +97,7 @@ namespace ActiveRagdoll {
         private void FixedUpdate() {
             UpdateTargetRotation();
             ApplyCustomDrag();
+            //if(AirControl) floatInAir(FloatHeight);
 
             switch (_balanceMode) {
                 case BALANCE_MODE.UPRIGHT_TORQUE:
@@ -119,7 +134,6 @@ namespace ActiveRagdoll {
                         var force = _torqueInput * manualTorque;
                         _activeRagdoll.PhysicalTorso.AddRelativeTorque(force.y, 0, force.x);
                     }
-
                     break;
 
                 default: break;
@@ -158,17 +172,12 @@ namespace ActiveRagdoll {
             switch (_balanceMode) {
                 case BALANCE_MODE.UPRIGHT_TORQUE:
                     break;
-
                 case BALANCE_MODE.FREEZE_ROTATIONS:
                     _activeRagdoll.PhysicalTorso.constraints = RigidbodyConstraints.FreezeRotation;
                     break;
-
                 case BALANCE_MODE.STABILIZER_JOINT:
                     var jointDrive = (JointDrive) _stabilizerJointDrive;
                     _stabilizerJoint.angularXDrive = _stabilizerJoint.angularYZDrive = jointDrive;
-                    break;
-
-                case BALANCE_MODE.MANUAL_TORQUE:
                     break;
 
                 default: break;
@@ -190,9 +199,6 @@ namespace ActiveRagdoll {
                     _stabilizerJoint.angularXDrive = _stabilizerJoint.angularYZDrive = jointDrive;
                     break;
 
-                case BALANCE_MODE.MANUAL_TORQUE:
-                    break;
-
                 default: break;
             }
         }
@@ -200,5 +206,29 @@ namespace ActiveRagdoll {
         public void ManualTorqueInput(Vector2 torqueInput) {
             _torqueInput = torqueInput;
         }
+
+        public void ManualUpTorqueInput()
+        {
+            _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * JumpForce * 1000);
+        }
+
+        public void ManualUp()
+        {
+            _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * JumpForce * 1000);
+        }
+
+        public void ManualDown()
+        {
+            _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * JumpForce * 1000);
+        }
+
+        private void floatInAir(float Yposition)
+        {
+            Debug.Log(_cameraModule.Camera.transform.position.y + " " + Yposition);
+            if (_cameraModule.Camera.transform.position.y < Yposition) {
+                _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * FloatForce );
+            }
+        }
+
     }
 } // namespace ActiveRagdoll

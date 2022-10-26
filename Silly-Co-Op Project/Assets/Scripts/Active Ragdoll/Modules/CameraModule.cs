@@ -16,7 +16,11 @@ namespace ActiveRagdoll {
         public float scrollSensitivity = 1;
         public bool invertY = false, invertX = false;
 
-        public GameObject Camera { get; private set; }
+        [Header("--- Camera ---")]
+        [SerializeField]
+        public GameObject Camera;
+
+
         private Vector2 _cameraRotation;
         private Vector2 _inputDelta;
 
@@ -26,6 +30,21 @@ namespace ActiveRagdoll {
         public bool smooth = true;
 
         private Vector3 _smoothedLookPoint, _startDirection;
+
+        private void OnDisable()
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        private void OnEnable()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        private void OnDestroy()
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
 
 
         [Header("--- STEEP INCLINATIONS ---")]
@@ -40,7 +59,6 @@ namespace ActiveRagdoll {
         public float maxDistance = 5, initialDistance = 3.5f;
 
         private float _currentDistance;
-
 
         [Header("--- LIMITS ---")]
         [Tooltip("How far can the camera look down.")]
@@ -61,13 +79,16 @@ namespace ActiveRagdoll {
         }
 
         void Start() {
-            Camera = new GameObject("Active Ragdoll Camera", typeof(UnityEngine.Camera));
+            if(Camera==null) Camera = new GameObject("Active Ragdoll Camera", typeof(UnityEngine.Camera));
+            
+
             Camera.transform.parent = transform;
 
             _smoothedLookPoint = _lookPoint.position;
             _currentDistance = initialDistance;
 
             _startDirection = _lookPoint.forward;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         void Update() {

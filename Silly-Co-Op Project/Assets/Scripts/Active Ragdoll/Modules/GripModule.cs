@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ActiveRagdoll {
-    // Author: Sergio Abreu García | https://sergioabreu.me
 
     public class GripModule : Module {
         [Tooltip("What's the minimum weight the arm IK should have over the whole " +
@@ -15,18 +14,37 @@ namespace ActiveRagdoll {
         [Tooltip("Whether to only use Colliders marked as triggers to detect grip collisions.")]
         public bool onlyUseTriggers = false;
         public bool canGripYourself = false;
+        public bool OnlyLegs = false;
 
         private Gripper _leftGrip, _rightGrip;
 
 
-        private void Start() {
-            var leftHand = _activeRagdoll.GetPhysicalBone(HumanBodyBones.LeftHand).gameObject;
-            var rightHand = _activeRagdoll.GetPhysicalBone(HumanBodyBones.RightHand).gameObject;
 
-            (_leftGrip = leftHand.AddComponent<Gripper>()).GripMod = this;
-            (_rightGrip = rightHand.AddComponent<Gripper>()).GripMod = this;
+        private void Start() {
+            
         }
 
+        public void SetBones(bool OnlyLegs)
+        {
+            this.OnlyLegs = OnlyLegs;
+            GameObject left;
+            GameObject right;
+
+            if (OnlyLegs)
+            {
+                left = _activeRagdoll.GetPhysicalBone(HumanBodyBones.LeftFoot).gameObject;
+                right = _activeRagdoll.GetPhysicalBone(HumanBodyBones.RightFoot).gameObject;  
+
+            }
+            else
+            {
+                left = _activeRagdoll.GetPhysicalBone(HumanBodyBones.LeftHand).gameObject;
+                right = _activeRagdoll.GetPhysicalBone(HumanBodyBones.RightHand).gameObject;
+            }
+
+            (_leftGrip = left.AddComponent<Gripper>()).GripMod = this;
+            (_rightGrip = right.AddComponent<Gripper>()).GripMod = this;
+        }
 
         public void UseLeftGrip(float weight) {
             _leftGrip.enabled = weight > leftArmWeightThreshold;

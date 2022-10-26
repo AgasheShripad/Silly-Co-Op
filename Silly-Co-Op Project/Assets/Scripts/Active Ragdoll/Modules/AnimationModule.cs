@@ -165,5 +165,12 @@ namespace ActiveRagdoll {
 
             _animatorHelper.RightArmIKWeight = weight;
         }
+
+        public void Jump()
+        {
+            if (!_enableIK)
+                return;
+            
+        }
     }
 } // namespace ActiveRagdoll

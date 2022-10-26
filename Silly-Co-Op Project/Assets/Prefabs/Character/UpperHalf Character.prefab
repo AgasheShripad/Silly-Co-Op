@@ -1231,6 +1231,7 @@ MonoBehaviour:
     _positionSpring: 1000
     _positionDamper: 50
     _maximumForce: 800
+  JumpForce: 200
   freezeRotationSpeed: 5
 --- !u!114 &4652432953932945753
 MonoBehaviour:
@@ -1345,6 +1346,7 @@ MonoBehaviour:
     angularZLimit: 30
   onlyUseTriggers: 0
   canGripYourself: 0
+  OnlyLegs: 0
 --- !u!114 &4652432953869198684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1357,12 +1359,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a99a089540cbdcd41949301a214ff2d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnlyLegs: 0
   _activeRagdoll: {fileID: 4314487729588193494}
   _physicsModule: {fileID: 4652432953932945749}
   _animationModule: {fileID: 4652432953869198676}
   _gripModule: {fileID: 4652432953869198686}
   _cameraModule: {fileID: 4652432953932945753}
   _enableMovement: 1
+  _upRight: 1
 --- !u!1 &4843146674936966252
 GameObject:
   m_ObjectHideFlags: 0

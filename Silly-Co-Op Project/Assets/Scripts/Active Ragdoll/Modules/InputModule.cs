@@ -3,33 +3,61 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ActiveRagdoll {
-    // Author: Sergio Abreu García | https://sergioabreu.me
+
 
     /// <summary> Tells the ActiveRagdoll what it should do. Input can be external (like the
     /// one from the player or from another script) and internal (kind of like sensors, such as
     /// detecting if it's on floor). </summary>
     public class InputModule : Module {
-        // ---------- EXTERNAL INPUT ----------
 
+        #region External Input
         public delegate void onMoveDelegate(Vector2 movement);
+        public delegate void onLeftDelegate(float armWeight);
+        public delegate void onRightDelegate(float armWeight);
+        public delegate void onJumpDelegate();
+        public delegate void onUpDelegate();
+        public delegate void onDownDelegate();
+
         public onMoveDelegate OnMoveDelegates { get; set; }
-        public void OnMove(InputValue value) {
+        public onRightDelegate OnRightDelegates { get; set; }
+        public onLeftDelegate OnLeftDelegates { get; set; }
+        public onJumpDelegate OnJumpDelegates { get; set; }
+        public onJumpDelegate OnUpDelegates { get; set; }
+        public onJumpDelegate OnDownDelegates { get; set; }
+
+
+        public void OnMove(InputValue value)
+        {
             OnMoveDelegates?.Invoke(value.Get<Vector2>());
         }
 
-        public delegate void onLeftArmDelegate(float armWeight);
-        public onLeftArmDelegate OnLeftArmDelegates { get; set; }
-        public void OnLeftArm(InputValue value) {
-            OnLeftArmDelegates?.Invoke(value.Get<float>());
+        public void OnLeft(InputValue value)
+        {
+            OnLeftDelegates?.Invoke(value.Get<float>());
         }
 
-        public delegate void onRightArmDelegate(float armWeight);
-        public onRightArmDelegate OnRightArmDelegates { get; set; }
-        public void OnRightArm(InputValue value) {
-            OnRightArmDelegates?.Invoke(value.Get<float>());
+        public void OnRight(InputValue value) {
+            OnRightDelegates?.Invoke(value.Get<float>());
+        }
+        
+        public void OnJump(InputValue value)
+        {
+           if(_isOnFloor) OnJumpDelegates?.Invoke();
         }
 
+        public void OnUp()
+        {
+            OnUpDelegates?.Invoke();
+        }
+
+        public void OnDown()
+        {
+            OnUpDelegates?.Invoke();
+        }
+
+        #endregion
         // ---------- INTERNAL INPUT ----------
+        #region Internal Input
 
         [Header("--- FLOOR ---")]
         public float floorDetectionDistance = 0.3f;
@@ -40,10 +68,13 @@ namespace ActiveRagdoll {
 
         Rigidbody _rightFoot, _leftFoot;
 
+        #endregion
 
         void Start() {
             _rightFoot = _activeRagdoll.GetPhysicalBone(HumanBodyBones.RightFoot).GetComponent<Rigidbody>();
             _leftFoot = _activeRagdoll.GetPhysicalBone(HumanBodyBones.LeftFoot).GetComponent<Rigidbody>();
+
+
         }
 
         void Update() {
