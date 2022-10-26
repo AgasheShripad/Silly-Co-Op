@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1706.6667
     height: 917.3334
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Project
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 371}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 16
+  controlID: 57
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 17
+  controlID: 63
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 18
+  controlID: 64
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -386,13 +386,13 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Custom Scripts
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Custom Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Unity Project\Spacial & Temporal\Co-Op\Silly-Co-Op\Silly-Co-Op
     Project
@@ -400,9 +400,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: d2530000
-    m_LastClickedID: 21458
-    m_ExpandedIDs: 00000000b05300009a470100
+    m_SelectedIDs: c4590000
+    m_LastClickedID: 22980
+    m_ExpandedIDs: 00000000b6590000b8590000be590000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -430,7 +430,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000b0530000
+    m_ExpandedIDs: 00000000b6590000b8590000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -457,7 +457,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -560,9 +560,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 183afeff
-      m_LastClickedID: -116200
-      m_ExpandedIDs: 183afeffe871feff0086feffe2c5feffecc5feff00c6feff0ac6feff1ec6feff34c6feff3ec6feff54c6feff5ec6feff68c6feff70c6feff74c6feff80c6feffe4c6feff42d6feff4cd6feff60d6feff6ad6feff7ed6feff94d6feff9ed6feffb4d6feffbed6feffc8d6feffd0d6feffd4d6feffe0d6feff44d7feff98a2ffffe8a2ffffd8f8ffffe2f8fffff6f8ffff00f9ffff14f9ffff2af9ffff34f9ffff4af9ffff54f9ffff5ef9ffff66f9ffff6af9ffff76f9ffffdaf9ffff2efbffff
+      m_SelectedIDs: 74570000
+      m_LastClickedID: 22388
+      m_ExpandedIDs: 6ef8ffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -664,7 +664,7 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: 0, y: 25.333334}
+      snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: unity-transform-toolbar
@@ -696,8 +696,8 @@ MonoBehaviour:
       containerId: overlay-container--right
       floating: 0
       collapsed: 0
-      displayed: 0
-      snapOffset: {x: 0, y: 24.666666}
+      displayed: 1
+      snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: Scene View/Camera
@@ -812,7 +812,7 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1.4079816, y: 2.8252556, z: -2.0572383}
+    m_Target: {x: 0, y: 1, z: -10}
     speed: 2
     m_Value: {x: 1.4079816, y: 2.8252556, z: -2.0572383}
   m_RenderMode: 0
@@ -865,7 +865,7 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0.021233836, y: 0.97756636, z: -0.12165434, w: 0.17062627}
   m_Size:
-    m_Target: 0.23461616
+    m_Target: 12.124355
     speed: 2
     m_Value: 0.23461616
   m_Ortho:
@@ -1008,7 +1008,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 587.3334
-    width: 1303
+    width: 1078.3334
     height: 331.66663
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
