@@ -10,11 +10,26 @@ public class PlayerManager : MonoBehaviour
     private List<Transform> startingPoints;
     [SerializeField]
     private List<LayerMask> playerLayers;
+    [SerializeField]
+    private List<GameObject> playerPrefabs;
+
+    private int playerCount = 0;
+
     private PlayerInputManager playerInputManager;
 
     private void Awake()
     {
         playerInputManager = FindObjectOfType<PlayerInputManager>();
+        SetNextPlayerPrefab();
+    }
+
+    private void SetNextPlayerPrefab()
+    {
+        if (playerCount <= playerPrefabs.Count-1)
+        { 
+            playerInputManager.playerPrefab = playerPrefabs[playerCount];
+            playerCount++;
+        }
     }
 
     private void OnEnable()
@@ -49,11 +64,15 @@ public class PlayerManager : MonoBehaviour
         //set the layer
         //player.GetComponentInChildren<CinemachineVirtualCamera>().gameObject.layer = layerToAdd;
         //add the layer
-
+        
         player.GetComponentInChildren<Camera>().cullingMask |= 1 << layerToAdd;
-
+        SetNextPlayerPrefab();
         //set the action in the custom cinemachine Input Handler
         //playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Look");
 
+        if(playerCount <= playerPrefabs.Count - 1)
+        {
+            Destroy(playerInputManager.gameObject);
+        }
     }
 }

@@ -89,7 +89,7 @@ namespace ActiveRagdoll {
             _isOnFloor = CheckRigidbodyOnFloor(_rightFoot, out Vector3 foo)
                          || CheckRigidbodyOnFloor(_leftFoot, out foo);
 
-            if (_isOnFloor != lastIsOnFloor)
+            if (_isOnFloor != lastIsOnFloor && OnFloorChangedDelegates != null)
                 OnFloorChangedDelegates(_isOnFloor);
         }
 
