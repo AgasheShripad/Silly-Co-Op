@@ -69,21 +69,21 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Up",
-                    "type": "Button",
-                    "id": "97dd8ed3-9573-4648-8cb0-dc5cd84e590a",
+                    "name": "SprintPressed",
+                    "type": "PassThrough",
+                    "id": "16cc7289-8a59-43c6-bf61-3b73f90f8b08",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Down",
-                    "type": "Button",
-                    "id": "eea05a7c-4504-4a3c-a304-f6abe0b6059f",
+                    "name": "SprintReleased",
+                    "type": "PassThrough",
+                    "id": "6cbb8c96-b718-4175-bcbb-22e633bb9e29",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=1)",
                     "initialStateCheck": false
                 }
             ],
@@ -347,30 +347,52 @@
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ed535d63-531c-49e8-80fc-e16f17930040",
-                    "path": "<Keyboard>/q",
+                    "id": "866114ea-e42e-4dfd-ac73-18e7070e3744",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Up",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SprintPressed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ee122a01-1b90-4386-981f-91b28545a727",
-                    "path": "<Keyboard>/e",
+                    "id": "13656cac-9c5b-4eb8-9e4c-e79609d2ae0a",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Down",
+                    "groups": "Gamepad",
+                    "action": "SprintPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17664d4e-1c62-4d2f-bd67-4c17bd27df17",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SprintReleased",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9cafd502-9c75-42d9-ab80-48920822f2c6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SprintReleased",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

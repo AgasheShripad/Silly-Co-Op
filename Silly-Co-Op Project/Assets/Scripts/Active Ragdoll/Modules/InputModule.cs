@@ -15,15 +15,17 @@ namespace ActiveRagdoll {
         public delegate void onLeftDelegate(float armWeight);
         public delegate void onRightDelegate(float armWeight);
         public delegate void onJumpDelegate();
-        public delegate void onUpDelegate();
-        public delegate void onDownDelegate();
+        public delegate void onSprintDelegate(bool val);
+        public delegate void onFloorChangedDelegate(bool onFloor);
+
 
         public onMoveDelegate OnMoveDelegates { get; set; }
         public onRightDelegate OnRightDelegates { get; set; }
         public onLeftDelegate OnLeftDelegates { get; set; }
         public onJumpDelegate OnJumpDelegates { get; set; }
-        public onJumpDelegate OnUpDelegates { get; set; }
-        public onJumpDelegate OnDownDelegates { get; set; }
+        public onSprintDelegate OnSprintDelegates { get; set; }
+
+        public onFloorChangedDelegate OnFloorChangedDelegates { get; set; }
 
 
         public void OnMove(InputValue value)
@@ -45,14 +47,16 @@ namespace ActiveRagdoll {
            if(_isOnFloor) OnJumpDelegates?.Invoke();
         }
 
-        public void OnUp()
+        public void OnSprintPressed(InputValue value)
         {
-            OnUpDelegates?.Invoke();
+            Debug.Log("Spring Press Action Invoked" + value);
+            if (_isOnFloor) OnSprintDelegates?.Invoke(true);
         }
 
-        public void OnDown()
+        public void OnSprintReleased(InputValue value)
         {
-            OnUpDelegates?.Invoke();
+            Debug.Log("Spring Release Action Invoked" + value);
+            if (_isOnFloor) OnSprintDelegates?.Invoke(false);
         }
 
         #endregion
@@ -81,8 +85,10 @@ namespace ActiveRagdoll {
             UpdateOnFloor();
         }
 
-        public delegate void onFloorChangedDelegate(bool onFloor);
-        public onFloorChangedDelegate OnFloorChangedDelegates { get; set; }
+       
+        
+
+
         private void UpdateOnFloor() {
             bool lastIsOnFloor = _isOnFloor;
 

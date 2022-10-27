@@ -33,6 +33,7 @@ namespace ActiveRagdoll {
         [Header("--- MANUAL TORQUE ---")]
         public float manualTorque = 500;
         public float maxManualRotSpeed = 5;
+       
 
         private Vector2 _torqueInput;
         private float _jumptorqueInput;
@@ -49,7 +50,8 @@ namespace ActiveRagdoll {
         }
 
         [Header("--- Jump Force ---")]
-        public float JumpForce = 2000f;
+        public float JumpForce = 150f;
+        public float AirControlMultiplyer = 2f;
 
         [Header("--- Air Control ---")]
 
@@ -207,27 +209,14 @@ namespace ActiveRagdoll {
             _torqueInput = torqueInput;
         }
 
-        public void ManualUpTorqueInput()
+        public void ManualAirForce(Vector2 vector)
         {
-            _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * JumpForce * 1000);
+            _activeRagdoll.PhysicalTorso.AddForce(new Vector3(vector.x * JumpForce * AirControlMultiplyer , 0,vector.y * JumpForce * AirControlMultiplyer));
         }
 
-        public void ManualUp()
+        public void ManualUpForce()
         {
             _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * JumpForce * 1000);
-        }
-
-        public void ManualDown()
-        {
-            _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * JumpForce * 1000);
-        }
-
-        private void floatInAir(float Yposition)
-        {
-            Debug.Log(_cameraModule.Camera.transform.position.y + " " + Yposition);
-            if (_cameraModule.Camera.transform.position.y < Yposition) {
-                _activeRagdoll.PhysicalTorso.AddForce(Vector3.up * FloatForce );
-            }
         }
 
     }
