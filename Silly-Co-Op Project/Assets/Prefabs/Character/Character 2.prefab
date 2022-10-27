@@ -365,6 +365,7 @@ MonoBehaviour:
     _positionDamper: 50
     _maximumForce: 800
   JumpForce: 150
+  AirControlMultiplyer: 2
   _cameraModule: {fileID: 0}
   AirControl: 0
   FloatForce: 2000
@@ -507,9 +508,8 @@ MonoBehaviour:
   _animationModule: {fileID: 5107775960228088612}
   _gripModule: {fileID: 5107775960228088622}
   _cameraModule: {fileID: 5107775960290408233}
-  _enableMovement: 1
-  _upRight: 1
-  _speedMultiplyer: 5
+  _enableFloorMovement: 1
+  _inAir: 1
 --- !u!1 &5152718149898624900
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,7 +617,6 @@ GameObject:
   m_Component:
   - component: {fileID: 474342441783576212}
   - component: {fileID: 3936636983894608890}
-  - component: {fileID: 7282791116955292607}
   - component: {fileID: 1366948900160238809}
   m_Layer: 8
   m_Name: Camera
@@ -684,14 +683,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &7282791116955292607
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5692005544403745438}
-  m_Enabled: 1
 --- !u!135 &1366948900160238809
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1250,7 +1241,7 @@ PrefabInstance:
     - target: {fileID: 4406549012373832000, guid: 0e9a428405a52cf43b95ab206dd3babd,
         type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Player2
       objectReference: {fileID: 0}
     - target: {fileID: 4602617871742934666, guid: 0e9a428405a52cf43b95ab206dd3babd,
         type: 3}
