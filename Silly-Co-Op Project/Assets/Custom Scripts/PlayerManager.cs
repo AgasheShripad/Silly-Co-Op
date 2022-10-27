@@ -25,10 +25,15 @@ public class PlayerManager : MonoBehaviour
 
     private void SetNextPlayerPrefab()
     {
-        if (playerCount <= playerPrefabs.Count-1)
+        Debug.Log(playerCount + "  " + playerPrefabs.Count);
+        if (playerCount < playerPrefabs.Count)
         { 
             playerInputManager.playerPrefab = playerPrefabs[playerCount];
             playerCount++;
+        }
+        else
+        {
+           Destroy(this.gameObject);
         }
     }
 
@@ -69,10 +74,6 @@ public class PlayerManager : MonoBehaviour
         SetNextPlayerPrefab();
         //set the action in the custom cinemachine Input Handler
         //playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Look");
-
-        if(playerCount <= playerPrefabs.Count - 1)
-        {
-            Destroy(playerInputManager.gameObject);
-        }
+        
     }
 }
