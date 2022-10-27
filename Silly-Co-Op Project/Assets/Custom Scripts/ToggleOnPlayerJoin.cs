@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public class ToggleOnPlayerJoin : MonoBehaviour
     [SerializeField]
     private PlayerInputManager playerInputManager;
 
+
     private void Awake()
     {
        if(playerInputManager==null) playerInputManager = FindObjectOfType<PlayerInputManager>();
@@ -13,17 +15,17 @@ public class ToggleOnPlayerJoin : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInputManager.onPlayerJoined += ToggleThis;
+        playerInputManager.onPlayerJoined += ToggleAudioThis;
     }
 
     private void OnDisable()
     {
-        playerInputManager.onPlayerJoined -= ToggleThis;
+        playerInputManager.onPlayerJoined -= ToggleAudioThis;
     }
 
-    private void ToggleThis(PlayerInput player)
+    private void ToggleAudioThis(PlayerInput player)
     {
-        this.gameObject.SetActive(false);
+        this.GetComponent<AudioListener>().enabled = false;
     }
 }
 

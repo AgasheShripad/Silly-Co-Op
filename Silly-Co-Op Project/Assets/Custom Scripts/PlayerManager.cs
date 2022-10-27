@@ -5,39 +5,68 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
-    private List<PlayerInput> players = new List<PlayerInput>();
     [SerializeField]
-    private List<Transform> startingPoints;
-    [SerializeField]
-    private List<LayerMask> playerLayers;
-    [SerializeField]
-    private List<GameObject> playerPrefabs;
+    private static List<PlayerInput> Activeplayers = new List<PlayerInput>();
 
-    private int playerCount = 0;
+    [SerializeField]
+    public List<Transform> _startingPoints;
+
+    public static List<Transform> startingPoints = new List<Transform>();
+
+    [SerializeField]
+    private List<LayerMask> playerLayers = new List<LayerMask>();
+
+    [SerializeField]
+    private List<GameObject> playerPrefabs = new List<GameObject>();
+
+    private static Queue<int> playerInactiveQueue = new Queue<int>();
+
+    private static int playerCount = 1;
+    private int lastMaterial = 0;
+    private int maxPlayer;
+
 
     private PlayerInputManager playerInputManager;
+
+    private void Start()
+    {
+        startingPoints = _startingPoints;
+        maxPlayer = playerPrefabs.Count;
+    }
 
     private void Awake()
     {
         playerInputManager = FindObjectOfType<PlayerInputManager>();
-        SetNextPlayerPrefab();
     }
 
     private void SetNextPlayerPrefab()
     {
-        Debug.Log(playerCount + "  " + playerPrefabs.Count);
-        if (playerCount < playerPrefabs.Count)
-        { 
-            playerInputManager.playerPrefab = playerPrefabs[playerCount];
-            playerCount++;
-        }
-        else
+
+        if (playerInactiveQueue.Count <= 0 && Activeplayers.Count < maxPlayer)
         {
-           Destroy(this.gameObject);
+            playerInputManager.playerPrefab = playerPrefabs[playerCount]; // 1
+        }
+        if (playerInactiveQueue.Count > 0 && Activeplayers.Count < maxPlayer)
+        {
+            if (playerInactiveQueue.TryDequeue(out var PlayerNumber))
+            {
+                playerInputManager.playerPrefab = playerPrefabs[PlayerNumber];
+            } 
         }
     }
 
-    private void OnEnable()
+
+     public static void PlayerDead(PlayerInput player, int number)
+     {
+        if (Activeplayers.Contains(player))
+        {   
+            Activeplayers.Remove(player);
+            playerCount--;
+            if(!playerInactiveQueue.Contains(number-1)) playerInactiveQueue.Enqueue(number-1);
+        }
+     }
+
+     private void OnEnable()
     {
         playerInputManager.onPlayerJoined += AddPlayer;
     }
@@ -57,14 +86,14 @@ public class PlayerManager : MonoBehaviour
 
     public void AddPlayer(PlayerInput player)
     {
-        players.Add(player);
+        Activeplayers.Add(player);
 
         
         //need to use the parent due to the structure of the prefab
-        player.transform.position = startingPoints[players.Count - 1].position;
+        player.transform.position = startingPoints[Activeplayers.IndexOf(player)].position;
 
         //convert layer mask (bit) to an integer 
-        int layerToAdd = (int)Mathf.Log(playerLayers[players.Count - 1].value, 2);
+        int layerToAdd = (int)Mathf.Log(playerLayers[Activeplayers.Count - 1].value, 2);
         //Debug.Log("Layer TO Add "+layerToAdd);
         //set the layer
         //player.GetComponentInChildren<CinemachineVirtualCamera>().gameObject.layer = layerToAdd;
@@ -74,6 +103,8 @@ public class PlayerManager : MonoBehaviour
         SetNextPlayerPrefab();
         //set the action in the custom cinemachine Input Handler
         //playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Look");
-        
+
+        playerCount++;
+
     }
 }

@@ -172,5 +172,14 @@ namespace ActiveRagdoll {
                 return;
             
         }
+
+        public void Sprint(bool val)
+        {
+            if(val) 
+                Animator.SetFloat("speed", 3);
+            else
+                Animator.SetFloat("speed", 1);
+        }
+
     }
 } // namespace ActiveRagdoll

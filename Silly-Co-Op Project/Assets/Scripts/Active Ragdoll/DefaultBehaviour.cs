@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ActiveRagdoll;
+using UnityEngine.InputSystem;
 
 /// <summary> Default behaviour of an Active Ragdoll </summary>
 public class DefaultBehaviour : MonoBehaviour {
@@ -9,6 +10,10 @@ public class DefaultBehaviour : MonoBehaviour {
 
     [Header("Movement")]
     [SerializeField] public int CharStatus; // 0 = normal , 1 = legs, 2 = upper_body
+    [SerializeField] public int PlayerNumber = 0;
+    [SerializeField] public float Kill_Height=-10f;
+    [SerializeField] public float SprintMultiplier = 2f;
+    [SerializeField] private GameObject PysicalBody;
 
 
     [Header("Modules")]
@@ -19,10 +24,11 @@ public class DefaultBehaviour : MonoBehaviour {
     [SerializeField] private CameraModule _cameraModule;
 
     [Header("Movement")]
-    [SerializeField] private bool _enableMovement = true;
-    [SerializeField] private bool _upRight = true;
+    [SerializeField] private bool _enableFloorMovement = true;
+    [SerializeField] private bool _inAir = true;
     private Vector2 _movement;
-
+    private float _speedMultiplyer = 3f;
+    private float _speed = 1f;
     private Vector3 _aimDirection;
 
 
@@ -36,14 +42,11 @@ public class DefaultBehaviour : MonoBehaviour {
     }
 
     private void Start() {
-        // Link all the functions to its input to define how the ActiveRagdoll will behave.
-        // This is a default implementation, where the input player is binded directly to
-        // the ActiveRagdoll actions in a very simple way. But any implementation is
-        // possible, such as assigning those same actions to the output of an AI system.
-        if (CharStatus==1)
-        {
+
+        
             _activeRagdoll.Input.OnMoveDelegates += MovementInput;
             _activeRagdoll.Input.OnMoveDelegates += _physicsModule.ManualTorqueInput;
+
             _activeRagdoll.Input.OnFloorChangedDelegates += ProcessFloorChanged;
 
             _activeRagdoll.Input.OnLeftDelegates += _animationModule.UseLeftArm;
@@ -52,44 +55,12 @@ public class DefaultBehaviour : MonoBehaviour {
             _activeRagdoll.Input.OnRightDelegates += _gripModule.UseRightGrip;
 
             _activeRagdoll.Input.OnJumpDelegates += _animationModule.Jump;
-            _activeRagdoll.Input.OnJumpDelegates += _physicsModule.ManualUpTorqueInput;
-            _gripModule.SetBones(true);
-            _physicsModule.AirControl = false;
+            _activeRagdoll.Input.OnJumpDelegates += _physicsModule.ManualUpForce;
 
-        }
-        else if(CharStatus==2)
-        {
-            _activeRagdoll.Input.OnMoveDelegates += MovementInput;
-            _activeRagdoll.Input.OnMoveDelegates += _physicsModule.ManualTorqueInput;
-            _activeRagdoll.Input.OnFloorChangedDelegates += ProcessFloorChanged;
+            _activeRagdoll.Input.OnSprintDelegates += Sprint;
 
-            _activeRagdoll.Input.OnLeftDelegates += _animationModule.UseLeftArm;
-            _activeRagdoll.Input.OnLeftDelegates += _gripModule.UseLeftGrip;
-            _activeRagdoll.Input.OnRightDelegates += _animationModule.UseRightArm;
-            _activeRagdoll.Input.OnRightDelegates += _gripModule.UseRightGrip;
-
-            _activeRagdoll.Input.OnJumpDelegates += _animationModule.Jump;
-            _activeRagdoll.Input.OnJumpDelegates += _physicsModule.ManualUpTorqueInput;
-
-            _gripModule.SetBones(false);
-            _physicsModule.AirControl = true;
-        }
-        else
-        {
-            _activeRagdoll.Input.OnMoveDelegates += MovementInput;
-            _activeRagdoll.Input.OnMoveDelegates += _physicsModule.ManualTorqueInput;
-            _activeRagdoll.Input.OnFloorChangedDelegates += ProcessFloorChanged;
-
-            _activeRagdoll.Input.OnLeftDelegates += _animationModule.UseLeftArm;
-            _activeRagdoll.Input.OnLeftDelegates += _gripModule.UseLeftGrip;
-            _activeRagdoll.Input.OnRightDelegates += _animationModule.UseRightArm;
-            _activeRagdoll.Input.OnRightDelegates += _gripModule.UseRightGrip;
-
-            _activeRagdoll.Input.OnJumpDelegates += _animationModule.Jump;
-            _activeRagdoll.Input.OnJumpDelegates += _physicsModule.ManualUpTorqueInput;
-
-            _gripModule.SetBones(false);
-        }
+        _gripModule.SetBones(false);
+        
     }
 
         private void Update() {
@@ -103,17 +74,52 @@ public class DefaultBehaviour : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.F1))
             Debug.Break();
 #endif
+        
+        //if (PysicalBody.transform.position.y < Kill_Height) OnOutofBounds();
 
     }
-    
-    private void UpdateMovement() {
-        if (_movement == Vector2.zero || !_enableMovement ) {
-            if(_animationModule.Animator!=null) _animationModule.Animator.SetBool("moving", false);
-            return;
+
+    public void OnOutofBounds()
+    {
+        Debug.Log("Out of Bounds");
+        if (PlayerManager.startingPoints[PlayerNumber-1] != null)
+        {
+            PlayerManager.PlayerDead(this.GetComponent<PlayerInput>(), PlayerNumber);
+            Destroy(this.gameObject);
         }
 
+    }
+
+    public void Sprint(bool val)
+    {
+        if (val)
+            _speed = _speedMultiplyer;
+        else
+            _speed = 1f;
+    }
+
+    private void UpdateMovement() {
+        if (_movement == Vector2.zero && _enableFloorMovement)
+        {
+            if (_animationModule.Animator != null)
+            {
+                _animationModule.Animator.SetBool("moving", false);
+                _animationModule.Animator.SetFloat("speed", 1);
+            }
+            return;
+        }
+        else if (_inAir==true && _movement != Vector2.zero)
+        {
+            _physicsModule.ManualAirForce(_movement);
+            return;
+        }
+        else if(_animationModule.Animator == null)
+        {
+           return;
+        }
+        
         _animationModule.Animator.SetBool("moving", true);
-        _animationModule.Animator.SetFloat("speed", _movement.magnitude);        
+        _animationModule.Animator.SetFloat("speed", _speed * _movement.magnitude);        
 
         float angleOffset = Vector2.SignedAngle(_movement, Vector2.up);
         Vector3 targetForward = Quaternion.AngleAxis(angleOffset, Vector3.up) * Auxiliary.GetFloorProjection(_aimDirection);
@@ -122,18 +128,19 @@ public class DefaultBehaviour : MonoBehaviour {
 
     private void ProcessFloorChanged(bool onFloor) {
         if (onFloor) {
-            _upRight = false;
+            _inAir = false;
             //StartCoroutine(WaitBeforeDetectingFloor(5f));
             ProcessOnFloor();
         }
         else {
+            
             _physicsModule.SetBalanceMode(PhysicsModule.BALANCE_MODE.MANUAL_TORQUE);
-            _enableMovement = false;
+            _enableFloorMovement = false;
+            _inAir = true;
             _activeRagdoll.GetBodyPart("Head Neck")?.SetStrengthScale(0.1f);
             _activeRagdoll.GetBodyPart("Right Leg")?.SetStrengthScale(0.05f);
             _activeRagdoll.GetBodyPart("Left Leg")?.SetStrengthScale(0.05f);
             _animationModule.PlayAnimation("InTheAir");
-            _upRight = false;
         }
     }
 
@@ -145,24 +152,13 @@ public class DefaultBehaviour : MonoBehaviour {
         _activeRagdoll.GetBodyPart("Right Leg")?.SetStrengthScale(1f);
         _activeRagdoll.GetBodyPart("Left Leg")?.SetStrengthScale(1f);
         _animationModule.PlayAnimation("Idle");
-        _enableMovement = true;
-        _upRight = true;
+        _enableFloorMovement = true;
     }
 
     IEnumerator WaitBeforeDetectingFloor(float waitTime)
     {
         yield return wait(waitTime);
-        /*
-        _activeRagdoll.GetBodyPart("Head Neck")?.SetStrengthScale(Mathf.Lerp(_activeRagdoll.GetBodyPart("Head Neck").StrengthScale,1,waitTime));
-        _activeRagdoll.GetBodyPart("Right Leg")?.SetStrengthScale(Mathf.Lerp(_activeRagdoll.GetBodyPart("Right Leg").StrengthScale, 1, waitTime)); ;
-        _activeRagdoll.GetBodyPart("Left Leg")?.SetStrengthScale(Mathf.Lerp(_activeRagdoll.GetBodyPart("Left Leg").StrengthScale, 1, waitTime)); ;*/
-        _activeRagdoll.GetBodyPart("Head Neck")?.SetStrengthScale(1f);
-        _activeRagdoll.GetBodyPart("Right Leg")?.SetStrengthScale(1f);
-        _activeRagdoll.GetBodyPart("Left Leg")?.SetStrengthScale(1f);
-        //_animationModule.PlayAnimation("Idle");
-        _physicsModule.SetBalanceMode(PhysicsModule.BALANCE_MODE.STABILIZER_JOINT);
-        _enableMovement = true;
-        _upRight = true;
+        //
     }
 
     IEnumerator wait(float waitTime)
